@@ -1,0 +1,33 @@
+{
+  "name": "listr",
+  "version": "1.0.0",
+  "description": "A tool to compare two directories and list files unique to each",
+  "main": "dist/index.js",
+  "bin": {
+    "listr": "./dist/src/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/index.ts",
+    "dev": "ts-node src/index.ts",
+    "prepublishOnly": "npm run build",
+    "test": "jest"
+  },
+  "author": "michael.albinson",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/commander": "^2.12.0",
+    "@types/node": "^20.11.19",
+    "commander": "^14.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "@types/jest": "^29.0.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  },
+  "files": [
+    "dist"
+  ]
+}
