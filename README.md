@@ -37,7 +37,7 @@ npm run build
 ### Basic Usage
 
 ```bash
-list <directory1> <directory2>
+listr <directory1> <directory2>
 ```
 
 This will show all files that are unique to either directory.
@@ -66,8 +66,8 @@ listr -2 /path/to/first/dir /path/to/second/dir
 
 | Option | Description                                      |
 |--------|--------------------------------------------------|
-| `-1`   | Show only files unique to the first directory  |
-| `-2`   | Show only files unique to the second directory |
+| `-one` | Show only files unique to the first directory  |
+| `-two` | Show only files unique to the second directory |
 
 ## Development
 

@@ -20,6 +20,7 @@ export async function getFilesRecursively(dir: string, baseDir: string = dir): P
 		else
 			return [{relativePath, fullPath}];
 	}));
+
 	return files.flat();
 }
 
@@ -33,6 +34,12 @@ export function findUniqueFiles(files1: FileInfo[], files2: FileInfo[]) {
 	return {uniqueToFirst, uniqueToSecond};
 }
 
+function printSummary(uniqueToFirst: FileInfo[], uniqueToSecond: FileInfo[]) {
+	console.log(`Summary:`);
+	console.log(`  Files only in first directory: ${uniqueToFirst.length}`);
+	console.log(`  Files only in second directory: ${uniqueToSecond.length}`);
+}
+
 async function main() {
 	program
 		.name('list')
@@ -41,7 +48,8 @@ async function main() {
 		.argument('<dir2>', 'second directory to compare')
 		.option('-1, --one', 'only show files unique to the first directory')
 		.option('-2, --two', 'only show files unique to the second directory')
-		.option('--no-summary', 'skip the summary statistics')
+		.option('-q, --skip-summary', 'skip the summary statistics')
+		.option('-s, --summary-only', 'only show the summary statistics, not individual files')
 		.action(async (dir1: string, dir2: string, options: any) => {
 			try {
 				// Read both directories
@@ -49,6 +57,11 @@ async function main() {
 
 				// Find unique files
 				const {uniqueToFirst, uniqueToSecond} = findUniqueFiles(files1, files2);
+
+				if (options.summaryOnly) {
+					printSummary(uniqueToFirst, uniqueToSecond);
+					return;
+				}
 
 				// Output results based on options
 				if (!options.one && !options.two) {
@@ -61,18 +74,22 @@ async function main() {
 						console.log('\nFiles only in second directory:');
 						uniqueToSecond.forEach(file => console.log(`  ${file.fullPath}`));
 					}
-				} else if (options.one)
-					uniqueToFirst.forEach(file => console.log(file.fullPath));
-				else if (options.two)
-					uniqueToSecond.forEach(file => console.log(file.fullPath));
+				} else if (options.one) {
+					if (uniqueToFirst.length > 0) {
+						console.log('\nFiles only in first directory:');
+						uniqueToFirst.forEach(file => console.log(`  ${file.fullPath}`));
+					}
+				} else if (options.two) {
+					if (uniqueToSecond.length > 0) {
+						console.log('\nFiles only in second directory:');
+						uniqueToSecond.forEach(file => console.log(`  ${file.fullPath}`));
+					}
+				}
 
-				if (options.noSummary === true)
+				if (options.skipSummary)
 					return;
 
-				// Print summary if not disabled
-				console.log(`\nSummary:`);
-				console.log(`  Files only in first directory: ${uniqueToFirst.length}`);
-				console.log(`  Files only in second directory: ${uniqueToSecond.length}`);
+				printSummary(uniqueToFirst, uniqueToSecond);
 			} catch (error) {
 				console.error('Error:', error instanceof Error ? error.message : String(error));
 				process.exit(1);
